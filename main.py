@@ -67,7 +67,6 @@ fig_servis_device.update_layout(
 )
 
 st.plotly_chart(fig_servis_device)
-
 # ---- HIDE STREAMLIT STYLE ----
 hide_st_style = """
             <style>
