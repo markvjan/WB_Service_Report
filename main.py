@@ -31,7 +31,7 @@ df_selection = df.query(
     "device == @device"
 )
 # ---- MAINPAGE -----
-st.title(":bar_chart: Servis report")
+st.title(":bar_chart: Wöhler Bohemia - Servisní report")
 st.markdown("##")
 
 # TOK KPI's
