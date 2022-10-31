@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-st.set_page_config(page_title="Servis",
+st.set_page_config(page_title="WB - Servis",
                     page_icon=":bar_chart:",
                     layout="wide"
 )
@@ -10,11 +10,11 @@ st.set_page_config(page_title="Servis",
 @st.cache
 def get_data_from_excel():
     df = pd.read_excel(
-        io='OutputData.xlsx',
+        io='dataHistory.xlsx',
         engine='openpyxl',
-        sheet_name='DataPy',
-        usecols='A:D',
-        nrows=50,
+        sheet_name='data',
+        usecols='A:C',
+        nrows=3476,
     )
     return df
 df = get_data_from_excel()
