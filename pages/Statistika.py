@@ -19,7 +19,7 @@ def get_data_from_excel():
     return df
 df = get_data_from_excel()
 
-# ---- SIDEBAR -----
+# ---- SIDEBAR ------
 st.sidebar.header("Filtrování")
 
 yearId = st.sidebar.multiselect(
