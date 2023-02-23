@@ -1,6 +1,22 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+from datetime import datetime as dt
+import dateutil.relativedelta
+
+###################      DATE AND   TIME     #################
+#get actual date and save it to variable as string in format year month day
+actualMonth = dt.now()
+MonthPrev1 = actualMonth + dateutil.relativedelta.relativedelta(months=-1)
+MonthPrev2 = actualMonth + dateutil.relativedelta.relativedelta(months=-2)
+MonthPrev0 = actualMonth.strftime('%m')
+MonthPrev1 = MonthPrev1.strftime('%m')
+MonthPrev2 = MonthPrev2.strftime('%m')
+YearPrev0 = actualMonth.strftime('%y')
+YearPrev1 = actualMonth + dateutil.relativedelta.relativedelta(years=-1)
+YearPrev2 = actualMonth + dateutil.relativedelta.relativedelta(years=-2)
+YearPrev1 = YearPrev1.strftime('%y')
+YearPrev2 = YearPrev2.strftime('%y')
 
 st.set_page_config(page_title="WB - Servis",
                     page_icon=":bar_chart:",
@@ -15,6 +31,7 @@ def get_data_from_excel():
         sheet_name='data',
         usecols='A:C',
         nrows=3476,
+        dtype={'Rok':'str', 'Mesic':'str'}
     )
     return df
 df = get_data_from_excel()
@@ -43,35 +60,68 @@ device = st.sidebar.multiselect(
 df_selection = df.query(
     "Pristroj == @device & Mesic == @monthId & Rok == @yearId"
 )
-df_selection22 = df.query(
-    "Pristroj == @device & Mesic == @monthId & Rok == 22"
-)
-df_selection21 = df.query(
-    "Pristroj == @device & Mesic == @monthId & Rok == 21"
-)
-df_selection20 = df.query(
-    "Pristroj == @device & Mesic == @monthId & Rok == 20"
-)
+#TOTAL by YEAR
+df_selectionYearPrev0 = df.query("Rok == @YearPrev0")
+df_selectionYearPrev1 = df.query("Rok == @YearPrev1")
+df_selectionYearPrev2 = df.query("Rok == @YearPrev2")
+#TOTAL by YEAR0 and MONTH
+df_selectionYearPrev0Month0 = df.query("Rok == @YearPrev0 & Mesic == @MonthPrev0")
+df_selectionYearPrev0Month1 = df.query("Rok == @YearPrev0 & Mesic == @MonthPrev1")
+df_selectionYearPrev0Month2 = df.query("Rok == @YearPrev0 & Mesic == @MonthPrev2")
+#TOTAL by YEAR1 and MONTH
+df_selectionYearPrev1Month0 = df.query("Rok == @YearPrev1 & Mesic == @MonthPrev0")
+df_selectionYearPrev1Month1 = df.query("Rok == @YearPrev1 & Mesic == @MonthPrev1")
+df_selectionYearPrev1Month2 = df.query("Rok == @YearPrev1 & Mesic == @MonthPrev2")
+#TOTAL by YEAR2 and MONTH
+df_selectionYearPrev2Month0 = df.query("Rok == @YearPrev2 & Mesic == @MonthPrev0")
+df_selectionYearPrev2Month1 = df.query("Rok == @YearPrev2 & Mesic == @MonthPrev1")
+df_selectionYearPrev2Month2 = df.query("Rok == @YearPrev2 & Mesic == @MonthPrev2")
+
 # ---- MAINPAGE -----
 st.title(":bar_chart: Wöhler Bohemia - Servisní report")
 st.markdown("##")
+st.subheader(body="Statistika opravenených přístrojů")
 
 # TOK KPI's
-total_device = int(df_selection["Pristroj"].count())
-total_device22 = int(df_selection22["Pristroj"].count())
-total_device21 = int(df_selection21["Pristroj"].count())
-total_device20 = int(df_selection20["Pristroj"].count())
+total_deviceYearPrev0 = int(df_selectionYearPrev0["Pristroj"].count())
+total_deviceYearPrev1 = int(df_selectionYearPrev1["Pristroj"].count())
+total_deviceYearPrev2 = int(df_selectionYearPrev2["Pristroj"].count())
+total_deviceYear0Month0 = int(df_selectionYearPrev0Month0["Pristroj"].count())
+total_deviceYear0Month1 = int(df_selectionYearPrev0Month1["Pristroj"].count())
+total_deviceYear0Month2 = int(df_selectionYearPrev0Month2["Pristroj"].count())
+total_deviceYear1Month0 = int(df_selectionYearPrev1Month0["Pristroj"].count())
+total_deviceYear1Month1 = int(df_selectionYearPrev1Month1["Pristroj"].count())
+total_deviceYear1Month2 = int(df_selectionYearPrev1Month2["Pristroj"].count())
+total_deviceYear2Month0 = int(df_selectionYearPrev2Month0["Pristroj"].count())
+total_deviceYear2Month1 = int(df_selectionYearPrev2Month1["Pristroj"].count())
+total_deviceYear2Month2 = int(df_selectionYearPrev2Month2["Pristroj"].count())
 
-left_column, middle_column, right_column = st.columns(3)
+left_column, month0_column, month1_column, month2_column, sum_column = st.columns(5)
 with left_column:
-    st.subheader("Opravených přístrojů 2022:")
-    st.subheader(f"kusů: {total_device22:,}")
-with middle_column:
-    st.subheader("Opravených přístrojů 2021:")
-    st.subheader(f"kusů: {total_device21:,}")
-with right_column:
-    st.subheader("Opravených přístrojů 2020:")
-    st.subheader(f"kusů: {total_device20:,}")
+    st.subheader("Rok")
+    st.subheader(f"20{YearPrev0}")
+    st.subheader(f"20{YearPrev1}")
+    st.subheader(f"20{YearPrev2}")
+with month0_column:
+    st.subheader(f"Měsíc {MonthPrev0}:")
+    st.subheader(f"{total_deviceYear0Month0:,}")
+    st.subheader(f"{total_deviceYear1Month0:,}")
+    st.subheader(f"{total_deviceYear2Month0:,}")
+with month1_column:
+    st.subheader(f"Měsíc {MonthPrev1}:")
+    st.subheader(f"{total_deviceYear0Month1:,}")
+    st.subheader(f"{total_deviceYear1Month1:,}")
+    st.subheader(f"{total_deviceYear2Month1:,}")
+with month2_column:
+    st.subheader(f"Měsíc {MonthPrev2}:")
+    st.subheader(f"{total_deviceYear0Month2:,}")
+    st.subheader(f"{total_deviceYear1Month2:,}")
+    st.subheader(f"{total_deviceYear2Month2:,}")
+with sum_column:
+    st.subheader("Celkem:")
+    st.subheader(f"{total_deviceYearPrev0:,}")
+    st.subheader(f"{total_deviceYearPrev1:,}")
+    st.subheader(f"{total_deviceYearPrev2:,}")
     
 st.markdown("---")
 
@@ -84,7 +134,7 @@ fig_servis_device = px.bar(
     y="Rok",
     x=servis_by_device.index,
     
-    title="<b>Počet opravených přístrojů podle zvoleného filtru</b>",
+    title="<b>Graf: Skupiny Opravených přístrojů podle zvoleného filtru</b>",
     color_discrete_sequence=["#0083B8"] * len(servis_by_device),
 )
 fig_servis_device.update_layout(
