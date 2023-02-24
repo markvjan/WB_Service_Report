@@ -35,7 +35,7 @@ def get_data_from_excel():
 df = get_data_from_excel()
 
 # ---- MAINPAGE -----
-st.title("Wöhler Bohemia - Přístroje seznam")
+st.title("Wöhler Bohemia - Příjem")
 st.markdown("##")
 
 # TOK KPI's

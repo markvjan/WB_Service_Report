@@ -37,18 +37,28 @@ def get_data_from_excel():
 df = get_data_from_excel()
 
 # ---- SIDEBAR ------
-st.sidebar.header("Filtrování graf")
+st.sidebar.header("Filtrování")
 
-yearId  = st.sidebar.selectbox(
-    'Vyberte rok:',
-    (YearPrev0, YearPrev1, YearPrev2))
+yearId = st.sidebar.multiselect(
+    "Vyberte rok:",
+    options=df["Rok"].unique(),
+    default=df["Rok"].unique()
+)
 
-monthId  = st.sidebar.selectbox(
-    'Vyberte rok:',
-    (MonthPrev0, MonthPrev1, MonthPrev2))
+monthId = st.sidebar.multiselect(
+    "Vyberte měsíc:",
+    options=df["Mesic"].unique(),
+    default=df["Mesic"].unique()
+)
+
+device = st.sidebar.multiselect(
+    "Vyberte přístroj:",
+    options=df["Pristroj"].unique(),
+    default=df["Pristroj"].unique()
+)
 
 df_selection = df.query(
-   "Mesic == @monthId & Rok == @yearId"
+    "Pristroj == @device & Mesic == @monthId & Rok == @yearId"
 )
 #TOTAL by YEAR
 df_selectionYearPrev0 = df.query("Rok == @YearPrev0")
@@ -69,6 +79,7 @@ df_selectionYearPrev2Month2 = df.query("Rok == @YearPrev2 & Mesic == @MonthPrev2
 
 # ---- MAINPAGE -----
 st.title(":bar_chart: Wöhler Bohemia - Servisní report")
+st.markdown("##")
 st.subheader(body="Statistika opravenených přístrojů")
 
 # TOK KPI's
@@ -123,12 +134,12 @@ fig_servis_device = px.bar(
     y="Rok",
     x=servis_by_device.index,
     
-    title="<b>Graf:</b> Statistika opravených přístrojů v roce <b>20" + yearId + "</b> pro měsíc: <b>" + monthId +"</b>",
+    title="<b>Graf: Statistika pravených přístrojů po měsících</b>",
     color_discrete_sequence=["#0083B8"] * len(servis_by_device),
 )
 fig_servis_device.update_layout(
     plot_bgcolor="rgba(0,0,0,0)",
-    xaxis_title="Přístroj",
+    xaxis_title="Typ",
     yaxis_title="Počet",
 )
 
