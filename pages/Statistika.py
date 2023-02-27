@@ -130,6 +130,7 @@ fig_servis_device.update_layout(
     plot_bgcolor="rgba(0,0,0,0)",
     xaxis_title="Přístroj",
     yaxis_title="Počet",
+    width=1000,
 )
 
 st.plotly_chart(fig_servis_device)
