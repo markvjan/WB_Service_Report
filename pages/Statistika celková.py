@@ -78,6 +78,7 @@ fig_servis_device = px.bar(
     color='Rok',
     barmode='group',
     title="<b>Graf: Přehled opravených přístrojů, porovnání posledních 3 let</b>",
+    width=1200,
     #color_discrete_sequence=["#0083B8"] * len(servis_by_device0),
 )
 
@@ -102,6 +103,7 @@ fig_servis_group.update_layout(
     plot_bgcolor="rgba(0,0,0,0)",
     xaxis_title="<b>Přístroj</b>",
     yaxis_title="<b>Počet</b>",
+    width=1200,
 )
 
 ##New selection for pie chart for current year
