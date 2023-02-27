@@ -18,7 +18,7 @@ YearPrev2 = actualMonth + dateutil.relativedelta.relativedelta(years=-2)
 YearPrev1 = YearPrev1.strftime('%y')
 YearPrev2 = YearPrev2.strftime('%y')
 
-st.set_page_config(page_title="WB - Servis",
+st.set_page_config(page_title="WB - Servis - Statistika",
                     page_icon=":bar_chart:",
                     layout="wide"
 )

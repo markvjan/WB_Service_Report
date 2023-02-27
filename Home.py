@@ -17,7 +17,7 @@ del dataServiceID["description"]
 #rename columns
 dataServiceID.rename(columns={'protocol_id': 'Číslo protokolu', "customer_id": "Č. zákazníka", "device": "Přístroj", "s_n": "S/N", "name": "Jméno", "status": "Status", "abno": "AB číslo"},inplace=True)
 
-st.set_page_config(page_title="WB - Servis",
+st.set_page_config(page_title="WB - Servis - Příjem",
                     page_icon=":bar_chart:",
                     layout="wide"
 )
