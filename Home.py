@@ -1,14 +1,16 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-import numpy as np
-import os
-import glob
 
 ###################    EXCEL IMPORT PART     #################
-folder_path = 'C:\\Users\\jan_markvart\\Documents\\Python\\Projects\\Test1st\\data\\OutputData.xlsx'
+
 #for filename in glob.glob(os.path.join(folder_path, '*.xlsm')):
-dataServiceID = pd.read_excel(folder_path, 'receiptStock', dtype={'abno':'int'})
+try:
+    folder_path = 'J:\\420\Opravy\Programy\data\OutputData.xlsx'
+    dataServiceID = pd.read_excel(folder_path, 'receiptStock', dtype={'abno':'int'})
+except:
+    folder_path = 'OutputData.xlsx'
+    dataServiceID = pd.read_excel(folder_path, 'receiptStock', dtype={'abno':'int'})
 del dataServiceID["tel"]
 del dataServiceID["adress"]
 del dataServiceID["ico"]
@@ -17,7 +19,7 @@ del dataServiceID["description"]
 #rename columns
 dataServiceID.rename(columns={'protocol_id': 'Číslo protokolu', "customer_id": "Č. zákazníka", "device": "Přístroj", "s_n": "S/N", "name": "Jméno", "status": "Status", "abno": "AB číslo"},inplace=True)
 
-st.set_page_config(page_title="WB - Servis - Příjem",
+st.set_page_config(page_title="WB - Servis - Příjem přístrojů",
                     page_icon=":bar_chart:",
                     layout="wide"
 )

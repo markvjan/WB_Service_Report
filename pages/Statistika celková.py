@@ -112,6 +112,7 @@ df_pie_selection = servis_by_group.query(
 #Show charts
 st.plotly_chart(fig_servis_device)
 st.plotly_chart(fig_servis_group)
+st.markdown("---")
 
 ##Section for show pie chart with select box
 option = st.selectbox(
