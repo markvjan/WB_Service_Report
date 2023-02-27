@@ -7,7 +7,7 @@ import streamlit as st
 #for filename in glob.glob(os.path.join(folder_path, '*.xlsm')):
 
 folder_path = 'OutputData.xlsx'
-dataServiceID = pd.read_excel(folder_path, 'receiptStock', dtype={'abno':'int'})
+dataServiceID = pd.read_excel('OutputData.xlsx', 'receiptStock', dtype={'abno':'int'})
 del dataServiceID["tel"]
 del dataServiceID["adress"]
 del dataServiceID["ico"]
