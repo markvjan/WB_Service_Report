@@ -22,7 +22,7 @@ st.set_page_config(page_title="WB - Servis - Příjem",
                     layout="wide"
 )
 
-@st.cache
+#@st.cache
 def get_data_from_excel():
     df = pd.read_excel(
         io='dataHistory.xlsx',
