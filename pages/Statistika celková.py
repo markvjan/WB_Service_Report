@@ -33,7 +33,7 @@ YearPrev2 = YearPrev2.strftime('%y')
 
 
 @st.cache_data(ttl=600)
-def get_data_from_excel():
+def get_data_DB():
     db = client["streamlit-db"]
     collection = db["devices"]
     query11 = {}  # Define your query here if needed
@@ -42,7 +42,7 @@ def get_data_from_excel():
     df = df.drop(['_id'], axis=1)
     return df
 
-df = get_data_from_excel()
+df = get_data_DB()
 #change column to string to match par. @YearPrevX
 df['Rok'] = df['Rok'].astype(str)
 
@@ -74,8 +74,13 @@ servis_by_device0 = (
 ##This creates group of Pristroj column according first string
 servis_by_group = servis_by_device0
 servis_by_group = (
-    servis_by_group.groupby([servis_by_group.Pristroj.str[:1],'Rok']).sum().reset_index()
+    servis_by_group.groupby([servis_by_group.Pristroj.str[:1], 'Rok']).sum()
 )
+
+#Rename column because after reset index you got 2 same name columns, this leads to error
+servis_by_group.rename(columns = {'Pristroj':'NameAdditive'}, inplace = True)
+servis_by_group = servis_by_group.reset_index()
+
 ##Renamed column to specific name
 servis_by_group.loc[servis_by_group['Pristroj'].str.contains('A'), 'Pristroj'] = 'Analyzátory'
 servis_by_group.loc[servis_by_group['Pristroj'].str.contains('C'), 'Pristroj'] = 'CM'
