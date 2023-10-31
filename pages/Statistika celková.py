@@ -5,6 +5,21 @@ from datetime import datetime as dt
 import dateutil.relativedelta
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import pymongo
+
+st.set_page_config(page_title="WB - Servis - Statistika celková",
+                    page_icon=":bar_chart:",
+                    layout="wide"
+)
+
+
+# Initialize Mongodb connection.
+# Uses st.cache_resource to only run once.
+@st.cache_resource
+def init_connection():
+    return pymongo.MongoClient("mongodb+srv://honzamarkvart:admin@cluster0.ibdbn6l.mongodb.net/")
+
+client = init_connection()
 
 ###################      DATE AND   TIME     #################
 #get actual date and save it to variable as string in format year month day
@@ -15,23 +30,22 @@ YearPrev2 = actualMonth + dateutil.relativedelta.relativedelta(years=-2)
 YearPrev1 = YearPrev1.strftime('%y')
 YearPrev2 = YearPrev2.strftime('%y')
 
-st.set_page_config(page_title="WB - Servis - Statistika celková",
-                    page_icon=":bar_chart:",
-                    layout="wide"
-)
 
-#@st.cache
+
+@st.cache_data(ttl=600)
 def get_data_from_excel():
-    df = pd.read_excel(
-        io='dataHistory.xlsx',
-        engine='openpyxl',
-        sheet_name='data',
-        usecols='A:C',
-        nrows=3476,
-        dtype={'Rok':'str', 'Mesic':'str'}
-    )
+    db = client["streamlit-db"]
+    collection = db["devices"]
+    query11 = {}  # Define your query here if needed
+    data = list(collection.find(query11))
+    df = pd.DataFrame(data)
+    df = df.drop(['_id'], axis=1)
     return df
+
 df = get_data_from_excel()
+#change column to string to match par. @YearPrevX
+df['Rok'] = df['Rok'].astype(str)
+
 # ---- SIDEBAR ------
 st.sidebar.header("Filtrování")
 
