@@ -30,8 +30,6 @@ YearPrev2 = actualMonth + dateutil.relativedelta.relativedelta(years=-2)
 YearPrev1 = YearPrev1.strftime('%y')
 YearPrev2 = YearPrev2.strftime('%y')
 
-
-
 @st.cache_data(ttl=600)
 def get_data_DB():
     db = client["streamlit-db"]
@@ -43,6 +41,7 @@ def get_data_DB():
     return df
 
 df = get_data_DB()
+
 #change column to string to match par. @YearPrevX
 df['Rok'] = df['Rok'].astype(str)
 

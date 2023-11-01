@@ -3,38 +3,50 @@ import plotly.express as px
 import streamlit as st
 from datetime import datetime as dt
 import dateutil.relativedelta
-
-###################      DATE AND   TIME     #################
-#get actual date and save it to variable as string in format year month day
-actualMonth = dt.now()
-MonthPrev1 = actualMonth + dateutil.relativedelta.relativedelta(months=-1)
-MonthPrev2 = actualMonth + dateutil.relativedelta.relativedelta(months=-2)
-MonthPrev0 = actualMonth.strftime('%m')
-MonthPrev1 = MonthPrev1.strftime('%m')
-MonthPrev2 = MonthPrev2.strftime('%m')
-YearPrev0 = actualMonth.strftime('%y')
-YearPrev1 = actualMonth + dateutil.relativedelta.relativedelta(years=-1)
-YearPrev2 = actualMonth + dateutil.relativedelta.relativedelta(years=-2)
-YearPrev1 = YearPrev1.strftime('%y')
-YearPrev2 = YearPrev2.strftime('%y')
+import pymongo
 
 st.set_page_config(page_title="WB - Servis - Statistika",
                     page_icon=":bar_chart:",
                     layout="wide"
 )
 
-#@st.cache
-def get_data_from_excel():
-    df = pd.read_excel(
-        io='dataHistory.xlsx',
-        engine='openpyxl',
-        sheet_name='data',
-        usecols='A:C',
-        nrows=3476,
-        dtype={'Rok':'str', 'Mesic':'str'}
-    )
+# Initialize Mongodb connection.
+# Uses st.cache_resource to only run once.
+@st.cache_resource
+def init_connection():
+    return pymongo.MongoClient("mongodb+srv://honzamarkvart:admin@cluster0.ibdbn6l.mongodb.net/")
+
+client = init_connection()
+
+###################      DATE AND   TIME     #################
+#get actual date and save it to variable as string in format year month day
+actualMonth = dt.now()
+MonthPrev1 = actualMonth + dateutil.relativedelta.relativedelta(months=-1)
+MonthPrev2 = actualMonth + dateutil.relativedelta.relativedelta(months=-2)
+MonthPrev0 = actualMonth.strftime('%m').lstrip('0')
+MonthPrev1 = MonthPrev1.strftime('%m').lstrip('0')
+MonthPrev2 = MonthPrev2.strftime('%m').lstrip('0')
+YearPrev0 = actualMonth.strftime('%y')
+YearPrev1 = actualMonth + dateutil.relativedelta.relativedelta(years=-1)
+YearPrev2 = actualMonth + dateutil.relativedelta.relativedelta(years=-2)
+YearPrev1 = YearPrev1.strftime('%y')
+YearPrev2 = YearPrev2.strftime('%y')
+
+@st.cache_data(ttl=600)
+def get_data_DB():
+    db = client["streamlit-db"]
+    collection = db["devices"]
+    query11 = {}  # Define your query here if needed
+    data = list(collection.find(query11))
+    df = pd.DataFrame(data)
+    df = df.drop(['_id'], axis=1)
     return df
-df = get_data_from_excel()
+
+df = get_data_DB()
+
+#change column to string to match par. @YearPrevX and @MonthPrevX
+df['Rok'] = df['Rok'].astype(str)
+df['Mesic'] = df['Mesic'].astype(str)
 
 # ---- SIDEBAR ------
 st.sidebar.header("Filtrování graf")
