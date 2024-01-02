@@ -14,7 +14,7 @@ st.set_page_config(page_title="WB - Servis - Statistika",
 # Uses st.cache_resource to only run once.
 @st.cache_resource
 def init_connection():
-    return pymongo.MongoClient("mongodb+srv://honzamarkvart:admin@cluster0.ibdbn6l.mongodb.net/")
+    return pymongo.MongoClient("mongodb+srv://honzamarkvart:LordTamis18@cluster0.ibdbn6l.mongodb.net/?retryWrites=true&w=majority")
 
 client = init_connection()
 
