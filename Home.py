@@ -28,10 +28,24 @@ def get_data_DB():
 
 df = get_data_DB()
 df = df.drop(['adress', 'ico','mail'], axis=1)
+# Convert date columns to proper format if needed
 df['date'] = df['date'].dt.date
-#rename columns
+# Rename columns for better readability
 df.rename(columns={'protocol_id': 'Číslo protokolu', "customer_id": "Č. zákazníka", "device": "Přístroj", "s_n": "S/N", "name": "Jméno", "status": "Status", "abno": "AB číslo", "tel":"Telefon", "date":"Příjem", "description":"Popis"},inplace=True)
 
+@st.cache_data(ttl=600)
+def get_last_30_records():
+    db = client["streamlit-db"]
+    collection = db["last-protocol-id"]  # Název kolekce s posledními záznamy
+    # Najdi posledních 30 záznamů, seřazených podle _id (zajistí nejnovější nahoře)
+    data = list(collection.find().sort("_id", -1).limit(30))  # Seřazení sestupně podle _id
+    df = pd.DataFrame(data)
+    if '_id' in df.columns:
+        df = df.drop(['_id'], axis=1)  # Odstranění MongoDB _id
+    return df
+
+# Načti posledních 30 záznamů
+last_30_df = get_last_30_records()
 
 # ---- MAINPAGE -----
 st.title("Wöhler Bohemia - Příjem")
@@ -42,3 +56,7 @@ st.markdown("---")
 
 # WRITE TABLE
 st.dataframe(df)  # Same as st.write(df)
+
+# Posledních 30 opravených přístrojů
+st.markdown("### Tabulka posledních 30 přístrojů")
+st.dataframe(last_30_df, width=800, height=350)
